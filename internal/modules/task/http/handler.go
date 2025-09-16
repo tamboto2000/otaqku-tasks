@@ -22,6 +22,7 @@ func NewTaskHandler(taskSvc task.TaskService, logger *slog.Logger, authMddl echo
 func RegisterTaskHandler(h TaskHandler, router *echo.Echo) {
 	group := router.Group("tasks", h.authMddl)
 	group.POST("", h.CreateTask)
+	group.GET("", h.GetTaskList)
 }
 
 func (h TaskHandler) CreateTask(ectx echo.Context) error {
@@ -42,4 +43,24 @@ func (h TaskHandler) CreateTask(ectx echo.Context) error {
 	}
 
 	return common.OKResponse(ectx, "success", nil)
+}
+
+func (h TaskHandler) GetTaskList(ectx echo.Context) error {
+	ctx := ectx.Request().Context()
+	var req dto.Pagination
+	if err := ectx.Bind(&req); err != nil {
+		return common.InvalidQueryParamResponse(ectx, err)
+	}
+
+	accId, err := common.AccountIDFromEchoCtx(ectx)
+	if err != nil {
+		return common.InternalServerErrorResponse(ectx, h.logger, err)
+	}
+
+	taskList, err := h.taskSvc.GetTaskList(ctx, accId, req)
+	if err != nil {
+		return common.ErrorResponse(ectx, err)
+	}
+
+	return common.OKResponse(ectx, "success", taskList)
 }

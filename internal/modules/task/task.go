@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log/slog"
 	"time"
@@ -69,6 +70,7 @@ type TaskList struct {
 
 type TaskRepository interface {
 	Save(ctx context.Context, task Task) error
+	GetByAccountID(ctx context.Context, accId int, paginate dto.Pagination) (TaskList, error)
 }
 
 type PostgreTaskRepository struct {
@@ -91,4 +93,47 @@ func (repo PostgreTaskRepository) Save(ctx context.Context, task Task) error {
 	}
 
 	return nil
+}
+
+func (repo PostgreTaskRepository) GetByAccountID(ctx context.Context, accId int, paginate dto.Pagination) (TaskList, error) {
+	q := `SELECT id, title, status, created_at, updated_at FROM tasks WHERE account_id = $1 AND deleted_at IS NULL LIMIT $2 OFFSET $3`
+
+	var taskList TaskList
+	rows, err := repo.db.QueryxContext(ctx, q, accId, paginate.PageSize, common.GetOffset(paginate.Page, paginate.PageSize))
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return TaskList{}, common.ErrNotFound
+		}
+
+		repo.logger.Error(fmt.Sprintf("error on fetching list of tasks: %v", err), slog.Int("account_id", accId))
+		return TaskList{}, err
+	}
+
+	for rows.Next() {
+		var task Task
+		if err := rows.StructScan(&task); err != nil {
+			repo.logger.Error(fmt.Sprintf("error on scanning task from database to struct: %v", err))
+			return TaskList{}, err
+		}
+
+		taskList.Tasks = append(taskList.Tasks, task)
+	}
+
+	// Get the total count of account's tasks
+	q = `SELECT COUNT(id) FROM tasks WHERE account_id = $1 AND deleted_at IS NULL`
+	row := repo.db.QueryRowContext(ctx, q, accId)
+	var totalCount int
+	if err := row.Scan(&totalCount); err != nil {
+		repo.logger.Error(fmt.Sprintf("error on fetching account's total task count: %v", err), slog.Int("account_id", accId))
+		return TaskList{}, err
+	}
+
+	pageMetaData := dto.PaginationMetadata{
+		Pagination: paginate,
+		Total:      totalCount,
+	}
+
+	taskList.Pagination = pageMetaData
+
+	return taskList, nil
 }

@@ -24,6 +24,15 @@ func InvalidReqBodyResponse(ectx echo.Context, err error) error {
 	return ectx.JSON(http.StatusBadRequest, resp)
 }
 
+func InvalidQueryParamResponse(ectx echo.Context, err error) error {
+	resp := HTTPResponse{
+		Message: "Invalid filter",
+		Error:   Error{Message: err.Error()},
+	}
+
+	return ectx.JSON(http.StatusBadRequest, resp)
+}
+
 func ErrorResponse(ectx echo.Context, err error) error {
 	httpCode := http.StatusInternalServerError
 	resp := HTTPResponse{Message: "Internal server error"}
