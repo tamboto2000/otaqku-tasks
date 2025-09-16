@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "8b472e91-0030-44a3-a3dd-18e65a37d960",
+		"name": "Auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4347886"
+	},
+	"item": [
+		{
+			"name": "Register Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Franklin Collin Tamboto\",\n    \"email\": \"tamboto2000@gmail.com\",\n    \"password\": \"Kepler22b*\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"tamboto2000@gmail.com\",\n    \"password\": \"Kepler22b*\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Exchange refresh token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzU4MTEyMzM0LCJuYmYiOjE3NTgwMjU5MzQsImlhdCI6MTc1ODAyNTkzNCwianRpIjoiMDE5OTUyODItZTZjNC03NTAzLTlmNDUtZmUyMGMzZDZmY2JhIiwic2NvcGUiOiJyZWZyZXNoIn0.uaSi3d5CQ3PprqAQ5V4K5_P4Lar4CKcYoUKdc7JfFdo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/refresh_token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"refresh_token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

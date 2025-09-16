@@ -1,0 +1,357 @@
+{
+	"info": {
+		"_postman_id": "401da808-63d8-41b4-815d-e12ab98889c0",
+		"name": "Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4347886"
+	},
+	"item": [
+		{
+			"name": "Create Task",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzU4MDQ0NTIzLCJuYmYiOjE3NTgwNDQyMjMsImlhdCI6MTc1ODA0NDIyMywianRpIjoiMDE5OTUzOTktZjc1OC03N2YxLTkzYzgtNzA4ZDEyYzFlMzYxIiwic2NvcGUiOiJhY2Nlc3MifQ.FHVPjJVUhwAJRT5dyNcVhHVhBgHOGLUHFPnjyyC3W7U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Bake a cake\",\n    \"description\": \"Bake any cake that is sweet and tart\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/tasks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Invalid inputs",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 16 Sep 2025 17:09:12 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "151"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Invalid input\",\n    \"error\": {\n        \"code\": \"input_validation\",\n        \"message\": \"Invalid input\",\n        \"fields\": [\n            {\n                \"name\": \"\",\n                \"messages\": [\n                    \"title can not be empty\"\n                ]\n            }\n        ]\n    }\n}"
+				},
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Bake a cake\",\n    \"description\": \"Bake any cake that is sweet and tart\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 16 Sep 2025 17:10:04 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "22"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get task list",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzU4MDQ2MTEyLCJuYmYiOjE3NTgwNDU4MTIsImlhdCI6MTc1ODA0NTgxMiwianRpIjoiMDE5OTUzYjItMzU3Ni03NzFmLWI5OWQtMzljMGUwNzQ2ZjI3Iiwic2NvcGUiOiJhY2Nlc3MifQ.oWeiHiY93JWJf5XQQPlYoFVFrpya4ElWV1VgPcnalWE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks?page=1&page_size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "page_size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tasks?page=1&page_size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 16 Sep 2025 17:39:59 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "356"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"success\",\n    \"data\": {\n        \"tasks\": [\n            {\n                \"id\": 1,\n                \"title\": \"Bake a cake\",\n                \"status\": \"todo\",\n                \"created_at\": \"2025-09-16T17:10:04.788086Z\",\n                \"updated_at\": \"2025-09-16T17:10:04.788086Z\"\n            },\n            {\n                \"id\": 2,\n                \"title\": \"Bake a cake\",\n                \"status\": \"todo\",\n                \"created_at\": \"2025-09-16T17:37:12.270807Z\",\n                \"updated_at\": \"2025-09-16T17:37:12.270807Z\"\n            }\n        ],\n        \"pagination\": {\n            \"page\": 1,\n            \"page_size\": 10,\n            \"total\": 2\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get by ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzU4MDQ1NTE5LCJuYmYiOjE3NTgwNDUyMTksImlhdCI6MTc1ODA0NTIxOSwianRpIjoiMDE5OTUzYTktMmFhYi03YTdiLTk5ZmEtZjExNTAzZDI4OTFkIiwic2NvcGUiOiJhY2Nlc3MifQ.e_MHv_l6oO5TtCQa-09W9QVwWwXT9rhF-mfBs1v-Yik",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tasks/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 16 Sep 2025 17:57:31 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "215"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": 1,\n        \"title\": \"Bake a cake\",\n        \"description\": \"Bake any cake that is sweet and tart\",\n        \"status\": \"todo\",\n        \"created_at\": \"2025-09-16T17:10:04.788086Z\",\n        \"updated_at\": \"2025-09-16T17:10:04.788086Z\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzU4MDQ3NDE1LCJuYmYiOjE3NTgwNDcxMTUsImlhdCI6MTc1ODA0NzExNSwianRpIjoiMDE5OTUzYzYtMTk0Ny03OTYzLTlkZmEtMGQ1YWMxYWFiODc2Iiwic2NvcGUiOiJhY2Nlc3MifQ.p69EFbuQMIsJ8sV0pSF3e2LfatdkgC9SEHkwSRWsd9U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Bake a delicious cake\",\n    \"description\": \"Bake some delicious cakes that is sweet and tart\",\n    \"status\": \"in_progress\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/tasks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzU4MDQ2MTEyLCJuYmYiOjE3NTgwNDU4MTIsImlhdCI6MTc1ODA0NTgxMiwianRpIjoiMDE5OTUzYjItMzU3Ni03NzFmLWI5OWQtMzljMGUwNzQ2ZjI3Iiwic2NvcGUiOiJhY2Nlc3MifQ.oWeiHiY93JWJf5XQQPlYoFVFrpya4ElWV1VgPcnalWE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
