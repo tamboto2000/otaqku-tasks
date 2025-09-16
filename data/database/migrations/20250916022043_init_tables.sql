@@ -14,7 +14,7 @@ CREATE TABLE "tasks" (
   "account_id" int NOT NULL,
   "title" varchar(100) NOT NULL,
   "description" varchar,
-  "status" varchar(10) NOT NULL,
+  "status" varchar(20) NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   "updated_at" timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   "deleted_at" timestamp

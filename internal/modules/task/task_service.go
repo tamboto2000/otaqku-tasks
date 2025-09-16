@@ -67,6 +67,15 @@ func taskToTaskDTO(task Task) dto.Task {
 	}
 }
 
+func (svc TaskService) Update(ctx context.Context, accId int, req dto.Task) error {
+	task, err := ValidateTaskForUpdate(accId, req)
+	if err != nil {
+		return err
+	}
+
+	return svc.taskRepo.UpdateByAccountIDAndID(ctx, task)
+}
+
 func (svc TaskService) Delete(ctx context.Context, accId, id int) error {
 	return svc.taskRepo.DeleteByAccountIDAndID(ctx, accId, id)
 }

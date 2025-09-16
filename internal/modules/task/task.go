@@ -64,6 +64,46 @@ func NewTask(accId int, req dto.CreateTaskRequest) (Task, error) {
 	}, nil
 }
 
+func ValidateTaskForUpdate(accId int, req dto.Task) (Task, error) {
+	errValidation := common.Error{
+		Code:    common.ErrCodeInputValidation,
+		Message: "Invalid input",
+	}
+
+	var errTitle common.FieldError
+
+	if len(req.Title) > 100 {
+		errTitle.Messages = append(errTitle.Messages, "title can not be longer than 100 characters")
+	}
+
+	if len(errTitle.Messages) != 0 {
+		errValidation.Fields = append(errValidation.Fields, errTitle)
+	}
+
+	var errStatus common.FieldError
+	switch req.Status {
+	case StatusTODO, StatusInProgress, StatusBlocked, StatusDone, StatusAbandoned:
+	default:
+		errStatus.Messages = append(errStatus.Messages, "invalid status, valid statuses are: todo, in_progress, blocked, done, and abandoned")
+	}
+
+	if len(errStatus.Messages) != 0 {
+		errValidation.Fields = append(errValidation.Fields, errStatus)
+	}
+
+	if len(errValidation.Fields) != 0 {
+		return Task{}, errValidation
+	}
+
+	return Task{
+		ID:          req.ID,
+		AccountID:   accId,
+		Title:       req.Title,
+		Description: req.Description,
+		Status:      req.Status,
+	}, nil
+}
+
 type TaskList struct {
 	Tasks      []Task
 	Pagination dto.PaginationMetadata
@@ -74,6 +114,7 @@ type TaskRepository interface {
 	GetByAccountID(ctx context.Context, accId int, paginate dto.Pagination) (TaskList, error)
 	GetByAccountIDAndID(ctx context.Context, accId, id int) (Task, error)
 	DeleteByAccountIDAndID(ctx context.Context, accId, id int) error
+	UpdateByAccountIDAndID(ctx context.Context, task Task) error
 }
 
 type PostgreTaskRepository struct {
@@ -164,6 +205,25 @@ func (repo PostgreTaskRepository) DeleteByAccountIDAndID(ctx context.Context, ac
 	_, err := repo.db.ExecContext(ctx, q, accId, id)
 	if err != nil {
 		repo.logger.Error(fmt.Sprintf("error on deleting a task: %v", err), slog.Int("id", id))
+		return err
+	}
+
+	return nil
+}
+
+func (repo PostgreTaskRepository) UpdateByAccountIDAndID(ctx context.Context, task Task) error {
+	q := `UPDATE public.tasks
+SET
+    title       = COALESCE(NULLIF(:title, ''), title),
+    description = COALESCE(NULLIF(:description, ''), description),
+    status      = COALESCE(NULLIF(:status, ''), status),
+    updated_at  = CURRENT_TIMESTAMP
+WHERE account_id = :account_id
+  AND id = :id`
+
+	_, err := repo.db.NamedExecContext(ctx, q, task)
+	if err != nil {
+		repo.logger.Error(fmt.Sprintf("error on updating a task: %v", err), slog.Int("id", task.ID))
 		return err
 	}
 

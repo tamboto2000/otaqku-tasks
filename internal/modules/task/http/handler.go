@@ -26,6 +26,7 @@ func RegisterTaskHandler(h TaskHandler, router *echo.Echo) {
 	group.POST("", h.CreateTask)
 	group.GET("", h.GetTaskList)
 	group.GET("/:id", h.GetByID)
+	group.PUT("/:id", h.Update)
 	group.DELETE("/:id", h.Delete)
 }
 
@@ -106,6 +107,34 @@ func (h TaskHandler) Delete(ectx echo.Context) error {
 	}
 
 	if err := h.taskSvc.Delete(ctx, accId, id); err != nil {
+		return common.ErrorResponse(ectx, err)
+	}
+
+	return common.OKResponse(ectx, "success", nil)
+}
+
+func (h TaskHandler) Update(ectx echo.Context) error {
+	ctx := ectx.Request().Context()
+
+	var req dto.Task
+	if err := ectx.Bind(&req); err != nil {
+		return common.InvalidReqBodyResponse(ectx, err)
+	}
+
+	accId, err := common.AccountIDFromEchoCtx(ectx)
+	if err != nil {
+		return common.InternalServerErrorResponse(ectx, h.logger, err)
+	}
+
+	idStr := ectx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return common.InvalidQueryParamResponse(ectx, errors.New("invalid task number"))
+	}
+
+	req.ID = id
+
+	if err := h.taskSvc.Update(ctx, accId, req); err != nil {
 		return common.ErrorResponse(ectx, err)
 	}
 
