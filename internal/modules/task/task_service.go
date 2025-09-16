@@ -39,17 +39,30 @@ func (svc TaskService) GetTaskList(ctx context.Context, accId int, paginate dto.
 
 	var taskListDto dto.TaskList
 	for _, task := range taskList.Tasks {
-		taskListDto.Tasks = append(taskListDto.Tasks, dto.Task{
-			ID:          task.ID,
-			Title:       task.Title,
-			Description: task.Description,
-			Status:      task.Status,
-			CreatedAt:   task.CreatedAt,
-			UpdatedAt:   task.UpdatedAt,
-		})
+		taskListDto.Tasks = append(taskListDto.Tasks, taskToTaskDTO(task))
 	}
 
 	taskListDto.Pagination = taskList.Pagination
 
 	return taskListDto, nil
+}
+
+func (svc TaskService) GetByID(ctx context.Context, accId int, id int) (dto.Task, error) {
+	task, err := svc.taskRepo.GetByAccountIDAndID(ctx, accId, id)
+	if err != nil {
+		return dto.Task{}, err
+	}
+
+	return taskToTaskDTO(task), nil
+}
+
+func taskToTaskDTO(task Task) dto.Task {
+	return dto.Task{
+		ID:          task.ID,
+		Title:       task.Title,
+		Description: task.Description,
+		Status:      task.Status,
+		CreatedAt:   task.CreatedAt,
+		UpdatedAt:   task.UpdatedAt,
+	}
 }

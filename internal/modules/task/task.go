@@ -3,6 +3,7 @@ package task
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log/slog"
 	"time"
@@ -71,6 +72,7 @@ type TaskList struct {
 type TaskRepository interface {
 	Save(ctx context.Context, task Task) error
 	GetByAccountID(ctx context.Context, accId int, paginate dto.Pagination) (TaskList, error)
+	GetByAccountIDAndID(ctx context.Context, accId, id int) (Task, error)
 }
 
 type PostgreTaskRepository struct {
@@ -136,4 +138,21 @@ func (repo PostgreTaskRepository) GetByAccountID(ctx context.Context, accId int,
 	taskList.Pagination = pageMetaData
 
 	return taskList, nil
+}
+
+func (repo PostgreTaskRepository) GetByAccountIDAndID(ctx context.Context, accId, id int) (Task, error) {
+	q := `SELECT id, title, description, status, created_at, updated_at FROM tasks WHERE account_id = $1 AND id = $2 AND deleted_at IS NULL`
+
+	var task Task
+	row := repo.db.QueryRowxContext(ctx, q, accId, id)
+	if err := row.StructScan(&task); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return Task{}, common.ErrNotFound
+		}
+
+		repo.logger.Error(fmt.Sprintf("error on fetching a sigle task: %v", err), slog.Int("account_id", accId), slog.Int("id", id))
+		return Task{}, err
+	}
+
+	return task, nil
 }
