@@ -174,3 +174,7 @@ func (svc AuthService) validateToken(tokenStr string, scope string) (int, error)
 
 	return userId, nil
 }
+
+func (svc AuthService) ValidateAccessToken(ctx context.Context, tokenStr string) (int, error) {
+	return svc.validateToken(tokenStr, jwtScopeAccess)
+}

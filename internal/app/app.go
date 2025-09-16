@@ -36,7 +36,7 @@ func NewApp(cfg config.Config) (*App, error) {
 
 	// Register HTTP handlers
 	router := echo.New()
-	registerHandlers(router, svcs)
+	registerHandlers(router, logger, svcs)
 
 	// HTTP server
 	httpSrv := &http.Server{

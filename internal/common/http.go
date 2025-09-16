@@ -2,6 +2,8 @@ package common
 
 import (
 	"errors"
+	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -58,4 +60,14 @@ func OKResponse(ectx echo.Context, msg string, data any) error {
 	}
 
 	return ectx.JSON(http.StatusOK, resp)
+}
+
+func InternalServerErrorResponse(ectx echo.Context, logger *slog.Logger, err error) error {
+	resp := HTTPResponse{
+		Message: "Internal server error",
+	}
+
+	logger.Error(fmt.Sprintf("internal server error: %v", err))
+
+	return ectx.JSON(http.StatusInternalServerError, resp)
 }
