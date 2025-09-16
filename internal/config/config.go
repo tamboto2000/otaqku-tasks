@@ -26,10 +26,17 @@ type Logging struct {
 	WithSource bool       `env:"LOGGING_WITH_SOURCE"`
 }
 
+type JWT struct {
+	AccessTokenDuration  config.MinuteDuration   `env:"JWT_ACCESS_TOKEN_DURATION"`
+	RefreshTokenDuration config.MinuteDuration   `env:"JWT_REFRESH_TOKEN_DURATION"`
+	SigningKey           config.RawBase64Encoded `env:"JWT_SIGNING_KEY"`
+}
+
 type Config struct {
 	Database   Database
 	HTTPServer HTTPServer
 	Logging    Logging
+	JWT        JWT
 }
 
 func LoadConfig() (Config, error) {

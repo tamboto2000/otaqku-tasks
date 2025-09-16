@@ -5,7 +5,7 @@ stop-stack:
 	@docker compose down
 
 run:
-	go run .
+	@go run .
 
 build:
-	go build .
+	@go build .
