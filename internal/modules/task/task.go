@@ -73,6 +73,7 @@ type TaskRepository interface {
 	Save(ctx context.Context, task Task) error
 	GetByAccountID(ctx context.Context, accId int, paginate dto.Pagination) (TaskList, error)
 	GetByAccountIDAndID(ctx context.Context, accId, id int) (Task, error)
+	DeleteByAccountIDAndID(ctx context.Context, accId, id int) error
 }
 
 type PostgreTaskRepository struct {
@@ -155,4 +156,16 @@ func (repo PostgreTaskRepository) GetByAccountIDAndID(ctx context.Context, accId
 	}
 
 	return task, nil
+}
+
+func (repo PostgreTaskRepository) DeleteByAccountIDAndID(ctx context.Context, accId, id int) error {
+	q := `UPDATE tasks SET deleted_at = CURRENT_TIMESTAMP WHERE account_id = $1 AND id = $2`
+
+	_, err := repo.db.ExecContext(ctx, q, accId, id)
+	if err != nil {
+		repo.logger.Error(fmt.Sprintf("error on deleting a task: %v", err), slog.Int("id", id))
+		return err
+	}
+
+	return nil
 }

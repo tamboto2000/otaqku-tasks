@@ -66,3 +66,7 @@ func taskToTaskDTO(task Task) dto.Task {
 		UpdatedAt:   task.UpdatedAt,
 	}
 }
+
+func (svc TaskService) Delete(ctx context.Context, accId, id int) error {
+	return svc.taskRepo.DeleteByAccountIDAndID(ctx, accId, id)
+}
